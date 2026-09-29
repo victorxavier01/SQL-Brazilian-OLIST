@@ -1,5 +1,10 @@
 -- SCHEMAS
--- 01_create_tables.sql
+
+-- 1. LIMPEZA
+DROP TABLE IF EXISTS customers;
+DROP TABLE IF EXISTS products;
+DROP TABLE IF EXISTS orders;
+
 
 -- 2. Tabela de Clientes
 CREATE TABLE customers (
