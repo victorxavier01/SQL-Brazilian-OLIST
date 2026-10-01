@@ -14,3 +14,16 @@ GROUP BY
     product_id
 ORDER BY 
     total_vezes_comprado DESC;
+
+-- 1.2 Melhores vendedores
+SELECT
+	seller_id,
+	COUNT(DISTINCT order_id) AS total_vendas,
+	COUNT(order_item_id) AS total_vezes_vendidas
+FROM
+	orders_items
+GROUP BY
+	seller_id
+ORDER BY
+	total_vezes_vendidas DESC;
+
