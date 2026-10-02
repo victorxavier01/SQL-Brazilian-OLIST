@@ -10,7 +10,7 @@ SELECT
     COUNT(order_item_id) AS total_vezes_comprado
 FROM
     orders_items
-GROUP BY 
+GROUP BY
     product_id
 ORDER BY 
     total_vezes_comprado DESC;

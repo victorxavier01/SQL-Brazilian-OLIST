@@ -24,8 +24,8 @@ CREATE INDEX idx_customers_state ON customers(customer_state);
 CREATE TABLE products (
 	product_id VARCHAR(50) PRIMARY KEY,
 	product_category_name VARCHAR(50) NOT NULL,
-	product_name_lenght INT,
-	product_description_lenght INT,
+	product_name_length INT,
+	product_description_length INT,
 	product_photos_qty int,
 	product_weight_g int,
 	product_length_cm int,
