@@ -1,8 +1,4 @@
 -- 1. Tamanho da base de dados
-SELECT * FROM orders_items LIMIT 5;
-SELECT * FROM orders LIMIT 5;
-SELECT * FROM customers LIMIT 5;
-
 SELECT
 	COUNT(DISTINCT o.order_id) AS total_pedidos,
 	COUNT(DISTINCT o.customer_id ) AS total_clientes,
