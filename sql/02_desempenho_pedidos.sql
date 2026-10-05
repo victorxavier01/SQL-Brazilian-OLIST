@@ -64,3 +64,18 @@ WHERE o.order_status NOT IN ('canceled', 'unavailable')
 GROUP BY 1
 ORDER BY receita_total DESC
 LIMIT 10;
+
+-- 5. Produtos mais vendidos
+SELECT
+    oi.product_id,
+    p.product_category_name,
+    COUNT(DISTINCT o.order_id) AS total_pedidos,
+    COUNT(oi.order_item_id) AS itens_vendidos,
+    ROUND(SUM(oi.price), 2) AS receita
+FROM orders_items oi
+INNER JOIN products p ON p.product_id = oi.product_id
+INNER JOIN orders o ON o.order_id = oi.order_id
+WHERE o.order_status NOT IN ('canceled', 'unavailable')
+GROUP BY 1, 2
+ORDER BY itens_vendidos DESC
+LIMIT 10;
