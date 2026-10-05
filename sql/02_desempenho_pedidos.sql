@@ -79,3 +79,16 @@ WHERE o.order_status NOT IN ('canceled', 'unavailable')
 GROUP BY 1, 2
 ORDER BY itens_vendidos DESC
 LIMIT 10;
+
+-- 6. Melhores vendedores
+SELECT
+    oi.seller_id,
+    COUNT(DISTINCT o.order_id) AS total_pedidos,
+    COUNT(oi.order_item_id) AS itens_vendidos,
+    ROUND(SUM(oi.price + oi.freight_value), 2) AS receita_total
+FROM orders_items oi
+INNER JOIN orders o ON o.order_id = oi.order_id
+WHERE o.order_status NOT IN ('canceled', 'unavailable')
+GROUP BY 1
+ORDER BY receita_total DESC
+LIMIT 10;
