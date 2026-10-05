@@ -81,7 +81,7 @@ CREATE TABLE orders_payments (
 	payment_value DECIMAL(10,2)
 );
 
--- índice métodos de pagamentos
-CREATE INDEX idx_payment_payment_type ON orders_payments(payment_sequential);
-CREATE INDEX idx_payment_installments ON orders_payments(payments_installments);
-CREATE INDEX idx_payments_type ON orders_payments(payment_type);
+-- Índices pagamentos
+CREATE INDEX idx_payment_sequential ON orders_payments(payment_sequential);
+CREATE INDEX idx_payment_installments ON orders_payments(payment_installments);
+CREATE INDEX idx_payment_type ON orders_payments(payment_type);
