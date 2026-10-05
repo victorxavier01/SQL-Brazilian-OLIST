@@ -12,152 +12,152 @@ SELECT
 
 -- 1.2 Janela temporal
 SELECT
-	COUNT(DISTINCT o.order_id)    AS total_pedidos,
-	COUNT(DISTINCT o.customer_id) AS total_clientes,
-	MIN(o.order_purchase_timestamp) AS primeira_compra,
-	MAX(o.order_purchase_timestamp) AS ultima_compra
+    COUNT(DISTINCT o.order_id)    AS total_pedidos,
+    COUNT(DISTINCT o.customer_id) AS total_clientes,
+    MIN(o.order_purchase_timestamp) AS primeira_compra,
+    MAX(o.order_purchase_timestamp) AS ultima_compra
 FROM
-	orders o
+    orders o
 JOIN orders_items oi ON oi.order_id = o.order_id;
 
 -- 2.1 Itens de pedidos nulos
 SELECT
-	COUNT(*) FILTER (WHERE order_item_id IS NULL)       AS null_order_item_id,
-	COUNT(*) FILTER (WHERE product_id IS NULL)          AS null_product_id,
-	COUNT(*) FILTER (WHERE seller_id IS NULL)           AS null_seller_id,
-	COUNT(*) FILTER (WHERE shipping_limit_date IS NULL) AS null_shipping_limit_date,
-	COUNT(*) FILTER (WHERE price IS NULL)               AS null_price,
-	COUNT(*) FILTER (WHERE freight_value IS NULL)       AS null_freight
+    COUNT(*) FILTER (WHERE order_item_id IS NULL)       AS null_order_item_id,
+    COUNT(*) FILTER (WHERE product_id IS NULL)          AS null_product_id,
+    COUNT(*) FILTER (WHERE seller_id IS NULL)           AS null_seller_id,
+    COUNT(*) FILTER (WHERE shipping_limit_date IS NULL) AS null_shipping_limit_date,
+    COUNT(*) FILTER (WHERE price IS NULL)               AS null_price,
+    COUNT(*) FILTER (WHERE freight_value IS NULL)       AS null_freight
 FROM
-	orders_items;
+    orders_items;
 
--- 2.2 Pedidos com itens nulos
+-- 2.2 Pedidos: colunas nulas
 SELECT
-	COUNT(*) FILTER (WHERE customer_id IS NULL)                   AS null_customer_id,
-	COUNT(*) FILTER (WHERE order_status IS NULL)                  AS null_status,
-	COUNT(*) FILTER (WHERE order_purchase_timestamp IS NULL)      AS null_purchase,
-	COUNT(*) FILTER (WHERE order_approved_at IS NULL)             AS null_approved,
-	COUNT(*) FILTER (WHERE order_delivered_carrier_date IS NULL)  AS null_carrier,
-	COUNT(*) FILTER (WHERE order_delivered_customer_date IS NULL) AS null_delivered,
-	COUNT(*) FILTER (WHERE order_estimated_delivery_date IS NULL) AS null_estimated
+    COUNT(*) FILTER (WHERE customer_id IS NULL)                   AS null_customer_id,
+    COUNT(*) FILTER (WHERE order_status IS NULL)                  AS null_status,
+    COUNT(*) FILTER (WHERE order_purchase_timestamp IS NULL)      AS null_purchase,
+    COUNT(*) FILTER (WHERE order_approved_at IS NULL)             AS null_approved,
+    COUNT(*) FILTER (WHERE order_delivered_carrier_date IS NULL)  AS null_carrier,
+    COUNT(*) FILTER (WHERE order_delivered_customer_date IS NULL) AS null_delivered,
+    COUNT(*) FILTER (WHERE order_estimated_delivery_date IS NULL) AS null_estimated
 FROM
-	orders;
+    orders;
 
 -- 2.3 Avaliações nulas
 SELECT
-	COUNT(*) FILTER (WHERE order_id IS NULL)               AS null_order_id,
-	COUNT(*) FILTER (WHERE review_score IS NULL)           AS null_score,
-	COUNT(*) FILTER (WHERE review_comment_title IS NULL)   AS null_title,
-	COUNT(*) FILTER (WHERE review_comment_message IS NULL) AS null_message
+    COUNT(*) FILTER (WHERE order_id IS NULL)               AS null_order_id,
+    COUNT(*) FILTER (WHERE review_score IS NULL)           AS null_score,
+    COUNT(*) FILTER (WHERE review_comment_title IS NULL)   AS null_title,
+    COUNT(*) FILTER (WHERE review_comment_message IS NULL) AS null_message
 FROM
-	orders_reviews;
+    orders_reviews;
 
 -- 2.4 Pagamentos
 SELECT
-	COUNT(*) FILTER (WHERE payment_type IS NULL)         AS null_type,
-	COUNT(*) FILTER (WHERE payment_installments IS NULL) AS null_installments,
-	COUNT(*) FILTER (WHERE payment_value IS NULL)        AS null_value
+    COUNT(*) FILTER (WHERE payment_type IS NULL)         AS null_type,
+    COUNT(*) FILTER (WHERE payment_installments IS NULL) AS null_installments,
+    COUNT(*) FILTER (WHERE payment_value IS NULL)        AS null_value
 FROM
-	orders_payments;
+    orders_payments;
 
 -- 3.1 Duplicatas mesmo endereço
 SELECT
-	COUNT(*)           AS pessoas_com_varios_enderecos,
-	MAX(qtd_enderecos) AS max_enderecos_por_pessoa
+    COUNT(*)           AS pessoas_com_varios_enderecos,
+    MAX(qtd_enderecos) AS max_enderecos_por_pessoa
 FROM (
-	SELECT customer_unique_id,
-	       COUNT(DISTINCT customer_id) AS qtd_enderecos
-	FROM customers
-	GROUP BY customer_unique_id
-	HAVING COUNT(DISTINCT customer_id) > 1
+    SELECT customer_unique_id,
+           COUNT(DISTINCT customer_id) AS qtd_enderecos
+    FROM customers
+    GROUP BY customer_unique_id
+    HAVING COUNT(DISTINCT customer_id) > 1
 ) t;
 
 -- 3.2 Conferindo duplicatas
 SELECT
-	COUNT(*)                 AS linhas,
-	COUNT(DISTINCT order_id) AS pedidos_distintos
+    COUNT(*)                 AS linhas,
+    COUNT(DISTINCT order_id) AS pedidos_distintos
 FROM
-	orders;
+    orders;
 
 -- 4.1 Datas pedidos
 SELECT
-	COUNT(*) FILTER (WHERE order_delivered_customer_date IS NOT NULL
-	                  AND order_delivered_customer_date < order_purchase_timestamp) AS entrega_antes_da_compra,
-	COUNT(*) FILTER (WHERE order_estimated_delivery_date IS NOT NULL
-	                  AND order_estimated_delivery_date < order_purchase_timestamp) AS estimativa_antes_da_compra,
-	COUNT(*) FILTER (WHERE order_approved_at IS NOT NULL
-	                  AND order_approved_at < order_purchase_timestamp) AS aprovacao_antes_da_compra,
-	COUNT(*) FILTER (WHERE order_status = 'delivered'
-	                  AND order_delivered_customer_date IS NULL) AS entregue_sem_data,
-	COUNT(*) FILTER (WHERE order_status <> 'delivered'
-	                  AND order_delivered_customer_date IS NOT NULL) AS nao_entregue_com_data
+    COUNT(*) FILTER (WHERE order_delivered_customer_date IS NOT NULL
+                      AND order_delivered_customer_date < order_purchase_timestamp) AS entrega_antes_da_compra,
+    COUNT(*) FILTER (WHERE order_estimated_delivery_date IS NOT NULL
+                      AND order_estimated_delivery_date < order_purchase_timestamp) AS estimativa_antes_da_compra,
+    COUNT(*) FILTER (WHERE order_approved_at IS NOT NULL
+                      AND order_approved_at < order_purchase_timestamp) AS aprovacao_antes_da_compra,
+    COUNT(*) FILTER (WHERE order_status = 'delivered'
+                      AND order_delivered_customer_date IS NULL) AS entregue_sem_data,
+    COUNT(*) FILTER (WHERE order_status <> 'delivered'
+                      AND order_delivered_customer_date IS NOT NULL) AS nao_entregue_com_data
 FROM
-	orders;
+    orders;
 
--- 4.2 Limite de envio anets da compra
+-- 4.2 Limite de envio antes da compra
 SELECT
-	COUNT(*) AS limite_envio_antes_da_compra
+    COUNT(*) AS limite_envio_antes_da_compra
 FROM
-	orders_items oi
+    orders_items oi
 JOIN orders o ON o.order_id = oi.order_id
 WHERE oi.shipping_limit_date < o.order_purchase_timestamp;
 
 -- 5.1 Mapa de preços e fretes
 SELECT
-	MIN(price)        AS preco_min,
-	ROUND(PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY price), 2)    AS preco_p50,
-	ROUND(PERCENTILE_CONT(0.95) WITHIN GROUP (ORDER BY price), 2)    AS preco_p95,
-	ROUND(PERCENTILE_CONT(0.99) WITHIN GROUP (ORDER BY price), 2)    AS preco_p99,
-	MAX(price)        AS preco_max,
-	MIN(freight_value) AS frete_min,
-	ROUND(PERCENTILE_CONT(0.95) WITHIN GROUP (ORDER BY freight_value), 2) AS frete_p95,
-	ROUND(PERCENTILE_CONT(0.99) WITHIN GROUP (ORDER BY freight_value), 2) AS frete_p99,
-	MAX(freight_value) AS frete_max
+    MIN(price)         AS preco_min,
+    ROUND(PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY price), 2)    AS preco_p50,
+    ROUND(PERCENTILE_CONT(0.95) WITHIN GROUP (ORDER BY price), 2)    AS preco_p95,
+    ROUND(PERCENTILE_CONT(0.99) WITHIN GROUP (ORDER BY price), 2)    AS preco_p99,
+    MAX(price)         AS preco_max,
+    MIN(freight_value) AS frete_min,
+    ROUND(PERCENTILE_CONT(0.95) WITHIN GROUP (ORDER BY freight_value), 2) AS frete_p95,
+    ROUND(PERCENTILE_CONT(0.99) WITHIN GROUP (ORDER BY freight_value), 2) AS frete_p99,
+    MAX(freight_value) AS frete_max
 FROM
-	orders_items;
+    orders_items;
 
 -- 5.2 Valores acima de p99 (possíveis outliers)
 SELECT
-	COUNT(*) AS itens_acima_do_p99
+    COUNT(*) AS itens_acima_do_p99
 FROM
-	orders_items
+    orders_items
 WHERE price > (
-	SELECT PERCENTILE_CONT(0.99) WITHIN GROUP (ORDER BY price)
-	FROM orders_items
+    SELECT PERCENTILE_CONT(0.99) WITHIN GROUP (ORDER BY price)
+    FROM orders_items
 );
 
 -- 6.1 Preços e fretes impossíveis
 SELECT
-	COUNT(*) FILTER (WHERE price < 0)         AS precos_negativos,
-	COUNT(*) FILTER (WHERE price = 0)         AS precos_zero,
-	COUNT(*) FILTER (WHERE freight_value < 0) AS fretes_negativos
+    COUNT(*) FILTER (WHERE price < 0)         AS precos_negativos,
+    COUNT(*) FILTER (WHERE price = 0)         AS precos_zero,
+    COUNT(*) FILTER (WHERE freight_value < 0) AS fretes_negativos
 FROM
-	orders_items;
+    orders_items;
 
 -- 6.2 Exemplos
 SELECT
-	order_id,
-	order_item_id,
-	price,
-	freight_value
+    order_id,
+    order_item_id,
+    price,
+    freight_value
 FROM
-	orders_items
+    orders_items
 WHERE price < 0 OR freight_value < 0
 LIMIT 10;
 
 -- 6.3 Produtos com medidas impossíveis
 SELECT
-	COUNT(*) FILTER (WHERE product_weight_g < 0) AS peso_negativo,
-	COUNT(*) FILTER (WHERE product_length_cm < 0
-	                   OR product_height_cm < 0
-	                   OR product_width_cm < 0)  AS dimensao_negativa,
-	COUNT(*) FILTER (WHERE product_photos_qty = 0) AS sem_fotos
+    COUNT(*) FILTER (WHERE product_weight_g < 0) AS peso_negativo,
+    COUNT(*) FILTER (WHERE product_length_cm < 0
+                       OR product_height_cm < 0
+                       OR product_width_cm < 0)  AS dimensao_negativa,
+    COUNT(*) FILTER (WHERE product_photos_qty = 0) AS sem_fotos
 FROM
-	products;
+    products;
 
 -- 6.4 Notas fora da escala 1 a 5
 SELECT
-	COUNT(*) AS score_fora_da_escala
+    COUNT(*) AS score_fora_da_escala
 FROM
-	orders_reviews
+    orders_reviews
 WHERE review_score IS NOT NULL AND (review_score < 1 OR review_score > 5);

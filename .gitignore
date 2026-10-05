@@ -1,0 +1,16 @@
+# IDE
+.vscode/
+.idea/
+*.code-workspace
+
+# Sistema operacional
+Thumbs.db
+.DS_Store
+
+# Dumps e backups locais
+*.dump
+*.sql.bak
+
+# Exportações de resultados
+*.xlsx
+*.pdf
