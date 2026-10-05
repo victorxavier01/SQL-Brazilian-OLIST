@@ -4,12 +4,8 @@
 DROP TABLE IF EXISTS customers;
 DROP TABLE IF EXISTS products;
 DROP TABLE IF EXISTS orders;
-<<<<<<< Updated upstream
-=======
-DROP TABLE IF EXISTS orders_items;
+E IF EXISTS orders_items;
 DROP TABLE IF EXISTS orders_payments;
->>>>>>> Stashed changes
-
 
 -- 2. Tabela de Clientes
 CREATE TABLE customers (
@@ -103,3 +99,15 @@ CREATE TABLE orders_reviews (
 
 -- Índice reviews
 CREATE INDEX idx_review_score ON orders_reviews(review_score);
+
+-- 8. Tabela vendedores
+CREATE TABLE sellers (
+	seller_id VARCHAR(50) PRIMARY KEY,
+	seller_zip_code_prefix VARCHAR(10),
+	seller_city VARCHAR(20),
+	seller_state VARCHAR(2)
+)
+
+-- Índices vendedores
+	CREATE INDEX idx_seller_city ON sellers(seller_city);
+	CREATE INDEX idx_seller_state ON sellers(seller_state);
