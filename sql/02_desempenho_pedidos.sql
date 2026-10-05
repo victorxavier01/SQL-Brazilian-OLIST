@@ -31,3 +31,22 @@ SELECT
 FROM orders o
 WHERE o.order_status = 'delivered';
 
+-- 3.2 Prazo de entrega por categoria
+WITH entregas AS (
+    SELECT
+        o.order_id,
+        o.order_delivered_customer_date::date - o.order_estimated_delivery_date::date AS atraso_dias
+    FROM orders o
+    WHERE o.order_status = 'delivered'
+)
+SELECT
+    p.product_category_name,
+    COUNT(e.order_id)                                  AS pedidos,
+    ROUND(AVG(e.atraso_dias), 1)                       AS atraso_medio,
+    COUNT(e.order_id) FILTER (WHERE e.atraso_dias > 0) AS pedidos_atrasados
+FROM entregas e
+INNER JOIN orders_items oi ON e.order_id = oi.order_id
+INNER JOIN products p ON oi.product_id = p.product_id
+GROUP BY 1
+ORDER BY pedidos DESC
+LIMIT 15;
