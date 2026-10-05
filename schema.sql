@@ -84,7 +84,22 @@ CREATE TABLE orders_payments (
 	payment_value DECIMAL(10,2)
 );
 
--- índice métodos de pagamentos
+-- Índice pagamentos
 CREATE INDEX idx_payment_payment_type ON orders_payments(payment_sequential);
 CREATE INDEX idx_payment_installments ON orders_payments(payments_installments);
 CREATE INDEX idx_payments_type ON orders_payments(payment_type);
+
+-- 7. Tabela reviews
+CREATE TABLE orders_reviews (
+	review_id VARCHAR(50) PRIMARY KEY,
+	order_id VARCHAR(50),
+	review_score INT,
+	review_comment_title VARCHAR(30),
+	review_comment_message VARCHAR(200),
+	review_creation_date TIMESTAMP,
+	review_answer_timestamp TIMESTAMP,
+	FOREIGN KEY(order_id) REFERENCES products(order_id)
+)
+
+-- Índice reviews
+CREATE INDEX idx_review_score ON orders_reviews(review_score);
