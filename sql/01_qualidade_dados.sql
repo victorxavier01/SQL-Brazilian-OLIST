@@ -1,10 +1,6 @@
 -- 1. Tamanho da base de dados
-SELECT * FROM orders_items LIMIT 5;
-SELECT * FROM orders LIMIT 5;
-SELECT * FROM customers LIMIT 5;
-
 SELECT
-	COUNT(*) AS total_pedidos,
+	COUNT(DISTINCT o.order_id) AS total_pedidos,
 	COUNT(DISTINCT o.customer_id ) AS total_clientes,
 	MIN(o.order_purchase_timestamp) AS primeira_compra,
 	MAX(o.order_purchase_timestamp ) AS ultima_compra
@@ -19,7 +15,7 @@ SELECT
 	COUNT(*) FILTER (WHERE seller_id IS null) AS null_seller_id,
 	COUNT(*) FILTER (WHERE shipping_limit_date IS null) AS null_shopping_date,
 	COUNT(*) FILTER (WHERE price IS null) AS null_price,
-	COUNT(*) FILTER (WHERE product_id IS null) AS null_freight
+	COUNT(*) FILTER (WHERE freight_value IS null) AS null_freight
 FROM
 	orders_items;
 
