@@ -1,29 +1,11 @@
--- 1. KPIs
-SELECT * FROM orders_items LIMIT 5;
-SELECT * FROM orders LIMIT 5;
-SELECT * FROM customers LIMIT 5;
-
--- 1.1 Itens mais vendidos
-SELECT 
-    product_id,
-    COUNT(DISTINCT order_id) AS total_pedidos,
-    COUNT(order_item_id) AS total_vezes_comprado
-FROM
-    orders_items
-GROUP BY
-    product_id
-ORDER BY 
-    total_vezes_comprado DESC;
-
--- 1.2 Melhores vendedores
+-- 1. KPIs gerais
 SELECT
-	seller_id,
-	COUNT(DISTINCT order_id) AS total_vendas,
-	COUNT(order_item_id) AS total_vezes_vendidas
-FROM
-	orders_items
-GROUP BY
-	seller_id
-ORDER BY
-	total_vezes_vendidas DESC;
-
+    COUNT(DISTINCT o.order_id) as total_pedidos,
+    COUNT(DISTINCT oi.order_item_id) as itens_vendidos,
+    ROUND(SUM(oi.price + oi.freight_value), 2) as receita_total,
+    ROUND(SUM(oi.price), 2) as receita_produto,
+    ROUND(SUM(oi.freight_value), 2) as receita_frete,
+    ROUND(SUM(oi.price + oi.freight_value) / COUNT(DISTINCT o.order_id), 2) as ticket_medio
+FROM orders o
+INNER JOIN orders_items oi ON o.order_id = oi.order_id
+WHERE o.order_status NOT IN ('canceled', 'unavailable');
