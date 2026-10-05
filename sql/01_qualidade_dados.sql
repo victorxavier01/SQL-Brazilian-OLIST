@@ -154,3 +154,10 @@ SELECT
 	COUNT(*) FILTER (WHERE product_photos_qty = 0) AS sem_fotos
 FROM
 	products;
+
+-- 6.4 Notas fora da escala 1 a 5
+SELECT
+	COUNT(*) AS score_fora_da_escala
+FROM
+	orders_reviews
+WHERE review_score IS NOT NULL AND (review_score < 1 OR review_score > 5);
