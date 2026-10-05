@@ -133,3 +133,24 @@ SELECT
 	COUNT(*) FILTER (WHERE freight_value < 0) AS fretes_negativos
 FROM
 	orders_items;
+
+-- 6.2 Exemplos
+SELECT
+	order_id,
+	order_item_id,
+	price,
+	freight_value
+FROM
+	orders_items
+WHERE price < 0 OR freight_value < 0
+LIMIT 10;
+
+-- 6.3 Produtos com medidas impossíveis
+SELECT
+	COUNT(*) FILTER (WHERE product_weight_g < 0) AS peso_negativo,
+	COUNT(*) FILTER (WHERE product_length_cm < 0
+	                   OR product_height_cm < 0
+	                   OR product_width_cm < 0)  AS dimensao_negativa,
+	COUNT(*) FILTER (WHERE product_photos_qty = 0) AS sem_fotos
+FROM
+	products;
