@@ -4,6 +4,11 @@
 DROP TABLE IF EXISTS customers;
 DROP TABLE IF EXISTS products;
 DROP TABLE IF EXISTS orders;
+<<<<<<< Updated upstream
+=======
+DROP TABLE IF EXISTS orders_items;
+DROP TABLE IF EXISTS orders_payments;
+>>>>>>> Stashed changes
 
 
 -- 2. Tabela de Clientes
@@ -69,3 +74,17 @@ CREATE TABLE orders_items (
 -- Índice itens pedidos
 CREATE INDEX idx_order_item_seller_id ON orders_items(seller_id);
 CREATE INDEX idx_order_item_product_id ON orders_items(product_id);
+
+-- 6. Tabela pagamentos
+CREATE TABLE orders_payments (
+	order_id VARCHAR(50) PRIMARY KEY,
+	payment_sequential INT NOT NULL,
+	payment_type VARCHAR(20),
+	payment_installments INT,
+	payment_value DECIMAL(10,2)
+);
+
+-- índice métodos de pagamentos
+CREATE INDEX idx_payment_payment_type ON orders_payments(payment_sequential);
+CREATE INDEX idx_payment_installments ON orders_payments(payments_installments);
+CREATE INDEX idx_payments_type ON orders_payments(payment_type);
