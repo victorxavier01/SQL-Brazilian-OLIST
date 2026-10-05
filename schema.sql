@@ -6,7 +6,9 @@ DROP TABLE IF EXISTS products;
 DROP TABLE IF EXISTS orders;
 DROP TABLE IF EXISTS orders_items;
 DROP TABLE IF EXISTS orders_payments;
-
+DROP IF EXISTS orders_items;
+DROP TABLE IF EXISTS orders_payments;
+DROP TABLE IF EXISTS sellers;
 
 -- 2. Tabela de Clientes
 CREATE TABLE customers (
@@ -81,7 +83,34 @@ CREATE TABLE orders_payments (
 	payment_value DECIMAL(10,2)
 );
 
--- Índices pagamentos
-CREATE INDEX idx_payment_sequential ON orders_payments(payment_sequential);
-CREATE INDEX idx_payment_installments ON orders_payments(payment_installments);
-CREATE INDEX idx_payment_type ON orders_payments(payment_type);
+-- Índice pagamentos
+CREATE INDEX idx_payment_payment_type ON orders_payments(payment_sequential);
+CREATE INDEX idx_payment_installments ON orders_payments(payments_installments);
+CREATE INDEX idx_payments_type ON orders_payments(payment_type);
+
+-- 7. Tabela reviews
+CREATE TABLE orders_reviews (
+	review_id VARCHAR(50) PRIMARY KEY,
+	order_id VARCHAR(50),
+	review_score INT,
+	review_comment_title VARCHAR(30),
+	review_comment_message VARCHAR(200),
+	review_creation_date TIMESTAMP,
+	review_answer_timestamp TIMESTAMP,
+	FOREIGN KEY(order_id) REFERENCES products(order_id)
+)
+
+-- Índice reviews
+CREATE INDEX idx_review_score ON orders_reviews(review_score);
+
+-- 8. Tabela vendedores
+CREATE TABLE sellers (
+	seller_id VARCHAR(50) PRIMARY KEY,
+	seller_zip_code_prefix VARCHAR(10),
+	seller_city VARCHAR(20),
+	seller_state VARCHAR(2)
+)
+
+-- Índices vendedores
+	CREATE INDEX idx_seller_city ON sellers(seller_city);
+	CREATE INDEX idx_seller_state ON sellers(seller_state);
