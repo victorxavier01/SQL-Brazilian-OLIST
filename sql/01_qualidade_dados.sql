@@ -115,3 +115,21 @@ SELECT
 	MAX(freight_value) AS frete_max
 FROM
 	orders_items;
+
+-- 5.2 Valores acima de p99 (possíveis outliers)
+SELECT
+	COUNT(*) AS itens_acima_do_p99
+FROM
+	orders_items
+WHERE price > (
+	SELECT PERCENTILE_CONT(0.99) WITHIN GROUP (ORDER BY price)
+	FROM orders_items
+);
+
+-- 6.1 Preços e fretes impossíveis
+SELECT
+	COUNT(*) FILTER (WHERE price < 0)         AS precos_negativos,
+	COUNT(*) FILTER (WHERE price = 0)         AS precos_zero,
+	COUNT(*) FILTER (WHERE freight_value < 0) AS fretes_negativos
+FROM
+	orders_items;
