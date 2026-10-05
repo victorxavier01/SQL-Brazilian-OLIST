@@ -22,3 +22,12 @@ WHERE o.order_status NOT IN ('canceled', 'unavailable')
 GROUP BY 1
 ORDER BY 1;
 
+-- 3.1 Prazo de entrega
+SELECT
+    COUNT(*) AS total_pedidos,
+    COUNT(*) FILTER (WHERE o.order_delivered_customer_date > o.order_estimated_delivery_date) AS pedidos_atrasados,
+    ROUND(100 * COUNT(*) FILTER (WHERE o.order_delivered_customer_date > o.order_estimated_delivery_date) / COUNT(*), 2) AS pct,atrasados,
+    ROUND(AVG(o.order_delivered_customer_date - o.order_estimated_delivery_date), 2) AS atraso_medio
+FROM orders o
+WHERE o.order_status = 'delivered';
+
