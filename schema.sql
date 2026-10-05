@@ -4,8 +4,11 @@
 DROP TABLE IF EXISTS customers;
 DROP TABLE IF EXISTS products;
 DROP TABLE IF EXISTS orders;
-E IF EXISTS orders_items;
+DROP TABLE IF EXISTS orders_items;
 DROP TABLE IF EXISTS orders_payments;
+DROP TABLE IF EXISTS orders_reviews;
+DROP TABLE IF EXISTS sellers;
+DROP TABLE IF EXISTS geolocation;
 
 -- 2. Tabela de Clientes
 CREATE TABLE customers (
@@ -109,5 +112,18 @@ CREATE TABLE sellers (
 )
 
 -- Índices vendedores
-	CREATE INDEX idx_seller_city ON sellers(seller_city);
-	CREATE INDEX idx_seller_state ON sellers(seller_state);
+CREATE INDEX idx_seller_city ON sellers(seller_city);
+CREATE INDEX idx_seller_state ON sellers(seller_state);
+
+-- 9. Tabela geolocalização
+CREATE TABLE geolocation (
+	geolocation_zip_code_prefix VARCHAR(10),
+	geolocation_lat DECIMAL(10,6),
+	geolocation_lng DECIMAL(10,6),
+	geolocation_city VARCHAR(20),
+	geolocation_state VARCHAR(2)
+)
+
+-- Índice geolocalização
+create index idx_geolocation_city on geolocation(geolocation_city);
+create index idx_geolocation_state on geolocation(geolocation_state);
