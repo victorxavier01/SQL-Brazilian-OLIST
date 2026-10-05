@@ -12,7 +12,7 @@ WHERE o.order_status NOT IN ('canceled', 'unavailable');
 
 -- 2. Tendências mensais
 SELECT
-    DATE_TRUNC('month', o.orders_purchase_timestamp)    AS mes,
+    DATE_TRUNC('month', o.order_purchase_timestamp)     AS mes,
     COUNT(DISTINCT o.order_id)                          AS total_pedidos,
     COUNT(DISTINCT oi.order_item_id)                    AS itens_vendidos,
     ROUND(SUM(oi.price + oi.freight_value), 2)          AS receita_total
@@ -26,8 +26,8 @@ ORDER BY 1;
 SELECT
     COUNT(*) AS total_pedidos,
     COUNT(*) FILTER (WHERE o.order_delivered_customer_date > o.order_estimated_delivery_date) AS pedidos_atrasados,
-    ROUND(100 * COUNT(*) FILTER (WHERE o.order_delivered_customer_date > o.order_estimated_delivery_date) / COUNT(*), 2) AS pct,atrasados,
-    ROUND(AVG(o.order_delivered_customer_date - o.order_estimated_delivery_date), 2) AS atraso_medio
+    ROUND(100.0 * COUNT(*) FILTER (WHERE o.order_delivered_customer_date > o.order_estimated_delivery_date) / COUNT(*), 2) AS pct_atrasados,
+    ROUND(AVG(o.order_delivered_customer_date::date - o.order_estimated_delivery_date::date), 2) AS atraso_medio
 FROM orders o
 WHERE o.order_status = 'delivered';
 
