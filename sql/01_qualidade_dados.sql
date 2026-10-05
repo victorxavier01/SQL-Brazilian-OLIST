@@ -78,3 +78,40 @@ SELECT
 	COUNT(DISTINCT order_id) AS pedidos_distintos
 FROM
 	orders;
+
+-- 4.1 Datas pedidos
+SELECT
+	COUNT(*) FILTER (WHERE order_delivered_customer_date IS NOT NULL
+	                  AND order_delivered_customer_date < order_purchase_timestamp) AS entrega_antes_da_compra,
+	COUNT(*) FILTER (WHERE order_estimated_delivery_date IS NOT NULL
+	                  AND order_estimated_delivery_date < order_purchase_timestamp) AS estimativa_antes_da_compra,
+	COUNT(*) FILTER (WHERE order_approved_at IS NOT NULL
+	                  AND order_approved_at < order_purchase_timestamp) AS aprovacao_antes_da_compra,
+	COUNT(*) FILTER (WHERE order_status = 'delivered'
+	                  AND order_delivered_customer_date IS NULL) AS entregue_sem_data,
+	COUNT(*) FILTER (WHERE order_status <> 'delivered'
+	                  AND order_delivered_customer_date IS NOT NULL) AS nao_entregue_com_data
+FROM
+	orders;
+
+-- 4.2 Limite de envio anets da compra
+SELECT
+	COUNT(*) AS limite_envio_antes_da_compra
+FROM
+	orders_items oi
+JOIN orders o ON o.order_id = oi.order_id
+WHERE oi.shipping_limit_date < o.order_purchase_timestamp;
+
+-- 5.1 Mapa de preços e fretes
+SELECT
+	MIN(price)        AS preco_min,
+	ROUND(PERCENTILE_CONT(0.50) WITHIN GROUP (ORDER BY price), 2)    AS preco_p50,
+	ROUND(PERCENTILE_CONT(0.95) WITHIN GROUP (ORDER BY price), 2)    AS preco_p95,
+	ROUND(PERCENTILE_CONT(0.99) WITHIN GROUP (ORDER BY price), 2)    AS preco_p99,
+	MAX(price)        AS preco_max,
+	MIN(freight_value) AS frete_min,
+	ROUND(PERCENTILE_CONT(0.95) WITHIN GROUP (ORDER BY freight_value), 2) AS frete_p95,
+	ROUND(PERCENTILE_CONT(0.99) WITHIN GROUP (ORDER BY freight_value), 2) AS frete_p99,
+	MAX(freight_value) AS frete_max
+FROM
+	orders_items;
