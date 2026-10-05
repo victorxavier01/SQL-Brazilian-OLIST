@@ -50,3 +50,17 @@ INNER JOIN products p ON oi.product_id = p.product_id
 GROUP BY 1
 ORDER BY pedidos DESC
 LIMIT 15;
+
+-- 4. Categorias mais lucrativas
+SELECT
+    p.product_category_name,
+    COUNT(DISTINCT o.order_id)                 AS total_pedidos,
+    COUNT(oi.order_item_id)                    AS itens_vendidos,
+    ROUND(SUM(oi.price + oi.freight_value), 2) AS receita_total
+FROM orders_items oi
+JOIN orders o ON o.order_id = oi.order_id
+JOIN products p ON p.product_id = oi.product_id
+WHERE o.order_status NOT IN ('canceled', 'unavailable')
+GROUP BY 1
+ORDER BY receita_total DESC
+LIMIT 10;
