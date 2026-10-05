@@ -4,11 +4,8 @@
 DROP TABLE IF EXISTS customers;
 DROP TABLE IF EXISTS products;
 DROP TABLE IF EXISTS orders;
-<<<<<<< Updated upstream
-=======
 DROP TABLE IF EXISTS orders_items;
 DROP TABLE IF EXISTS orders_payments;
->>>>>>> Stashed changes
 
 
 -- 2. Tabela de Clientes
